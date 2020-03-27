@@ -1,0 +1,149 @@
+s := entities.NewSport(-1, "Test")
+err = dl.CreateSport(s)
+if err != nil {
+    panic(err)
+}
+fmt.Println(s)
+
+var s2 *entities.Sport
+s2, err = dl.FindSport("Test")
+if err != nil {
+    panic(err)
+}
+fmt.Println(s2)
+
+l := entities.NewLeague(-1, "League 1", s)
+err = dl.CreateLeague(l)
+if err != nil {
+    panic(err)
+}
+fmt.Println(l)
+
+var l2 *entities.League
+l2, err = dl.FindLeague("League 1", s.ID)
+if err != nil {
+    panic(err)
+}
+fmt.Println(l2)
+
+// err = dl.DeleteLeague( l2.ID)
+// if err != nil {
+// 	panic(err)
+// }
+// err = dl.DeleteSport( s.ID)
+// if err != nil {
+// 	panic(err)
+// }
+
+// l2, err = dl.FindLeague( "League 1", s.ID)
+// if err != nil {
+// 	panic(err)
+// }
+// fmt.Println(l2)
+
+// s2, err = dl.FindSport( "Test")
+// if err != nil {
+// 	panic(err)
+// }
+// fmt.Println(s2)
+
+t := entities.NewTeam(-1, "Team 1", l)
+dl.CreateTeam(t)
+fmt.Println(t)
+
+var t2 *entities.Team
+t2, err = dl.FindTeamByID(t.ID)
+if err != nil {
+    panic(err)
+}
+fmt.Println(t2)
+
+// err = dl.DeleteTeam( t.ID)
+// if err != nil {
+// 	panic(err)
+// }
+
+// t2, err = dl.FindTeamByID( t.ID)
+// if err != nil {
+// 	panic(err)
+// }
+// fmt.Println(t2)
+
+g := entities.NewGame(-1, "Game 1", s, l)
+err = dl.CreateGame(g)
+if err != nil {
+    panic(err)
+}
+fmt.Println(g)
+
+var g2 *entities.Game
+g2, err = dl.FindGame(g.Name, s.ID, l.ID)
+if err != nil {
+    panic(err)
+}
+fmt.Println(g2)
+
+// err = dl.DeleteGame( g.ID)
+// if err != nil {
+// 	panic(err)
+// }
+
+// g2, err = dl.FindGameByID( g.ID)
+// if err != nil {
+// 	panic(err)
+// }
+// fmt.Println(g2)
+
+tNow := time.Now()
+e := entities.NewGameEvent(-1, tNow, g, entities.T1x2)
+err = dl.CreateEvent(e)
+if err != nil {
+    panic(err)
+}
+fmt.Println(e)
+
+var e2 *entities.GameEvent
+e2, err = dl.FindEvent(&tNow, entities.T1x2, g.ID)
+if err != nil {
+    panic(err)
+}
+fmt.Println(e2)
+
+line := entities.NewLine(-1, entities.MoneyLine, "1x2", e)
+err = dl.CreateLine(line)
+if err != nil {
+    panic(err)
+}
+fmt.Println(line)
+
+var line2 *entities.Line
+line2, err = dl.FindLine(line.Description, e.ID)
+if err != nil {
+    panic(err)
+}
+fmt.Println(line2)
+
+odd := entities.NewOdd(-1, "banica", []float32{1.6, 2.2, 3.9}, line)
+err = dl.CreateOdd(odd)
+if err != nil {
+    panic(err)
+}
+fmt.Println(odd)
+
+var odd2 *entities.Odd
+odd2, err = dl.FindOdd("banica")
+if err != nil {
+    panic(err)
+}
+fmt.Println(odd2)
+
+// err = dl.DeleteOdd( odd.ID)
+// if err != nil {
+// 	panic(err)
+// }
+
+odd2, err = dl.FindOddByID(odd.ID)
+if err != nil {
+    panic(err)
+}
+fmt.Println(odd2)

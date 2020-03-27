@@ -1,0 +1,134 @@
+version: '3.3'
+services:
+  # DB Service
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: sports_betting_db
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+    volumes:
+      # Where our data will be persisted
+      - db-data:/var/lib/mysql
+
+  # User Service
+  user-service:
+    # Configuration for building the docker image for the service
+    build:
+      context: /home/good-mood/Git/sb-users # location of the Dockerfile
+      dockerfile: Dockerfile
+    environment:
+      MY_IP: ${MY_IP}
+    ports:
+      - "8080:8080" # Ports to expose {host}:{container}
+    restart: unless-stopped
+    expose:
+      - '8080' # Ports to expose to other containers
+    depends_on:
+      - db
+
+  # User Service
+  feed-service:
+    # Configuration for building the docker image for the service
+    build:
+      context: /home/good-mood/Git/sb-feed # location of the Dockerfile
+      dockerfile: Dockerfile
+    environment:
+      MY_IP: ${MY_IP}
+    ports:
+      - "8081:8081" # Ports to expose {host}:{container}
+    restart: unless-stopped
+    expose:
+      - '8081' # Ports to expose to other containers
+    depends_on:
+      - db
+
+  # Bets Service
+  bets-service:
+    # Configuration for building the docker image for the service
+    build:
+      context: /home/good-mood/Git/sb-bets # location of the Dockerfile
+      dockerfile: Dockerfile
+    environment:
+      MY_IP: ${MY_IP}
+    ports:
+      - "8082:8082" # Ports to expose {host}:{container}
+    restart: unless-stopped
+    expose:
+      - '8082' # Ports to expose to other containers
+    depends_on:
+      - db
+
+  # Metrics Service
+  metrics-service:
+    # Configuration for building the docker image for the service
+    build:
+      context: /home/good-mood/Git/sb-metrics # location of the Dockerfile
+      dockerfile: Dockerfile
+    environment:
+      MY_IP: ${MY_IP}
+    ports:
+      - "8083:8083" # Ports to expose {host}:{container}
+    restart: unless-stopped
+    expose:
+      - '8083' # Ports to expose to other containers
+    depends_on:
+      - db
+
+  # Zookeeper instance 1
+  zk1:
+    image: confluentinc/cp-zookeeper:5.4.0
+    ports:
+      - "2181:2181"
+    expose:
+      - "2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zk1:22888:23888
+
+  # Kafka broker 1
+  kafka-1:
+    image: confluentinc/cp-kafka:5.4.0
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zk1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zk1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${MY_IP}:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  # Kafdrop tool
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka-1:9092"
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      - "kafka-1"
+
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/good-mood/Git/sb-config/db-data

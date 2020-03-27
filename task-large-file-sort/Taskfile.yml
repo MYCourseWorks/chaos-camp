@@ -1,0 +1,25 @@
+version: '2'
+
+tasks:
+  run:
+    cmds:
+      - go run main.go
+    env:
+      IN_FILE: ./data/dataset-1MB
+      OUT_DIR: ./out
+      TRACE: true
+  test:
+    cmds:
+      - go test ./...
+  verify:
+    cmds:
+      - go run ./tools/verify/verify.go
+    env:
+      SORTED_FILE_PATH: ./out/sorted
+  generate:
+    cmds:
+      - go run ./tools/generate/generate.go
+    env:
+      GEN_COUNT_MB: 10
+      OUT_DIR: ./data
+      FILE_NAME: tmp

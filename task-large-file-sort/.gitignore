@@ -1,0 +1,9 @@
+.idea
+bin
+out
+trace.out
+__debug_bin
+
+data/*
+!data/dataset-1MB
+!data/dataset-small

@@ -1,0 +1,4 @@
+.line-container { padding: 5px; }
+.line-box { padding: 2px; }
+.line-box:nth-child(odd):hover { background: rgba(0, 151, 19, 0.3); cursor: pointer; }
+.line-box-content { padding: 5%; }

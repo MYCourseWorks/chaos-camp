@@ -1,0 +1,26 @@
+.sports-menu { background: #ededed; font-size: 1em; }
+.sport-menu-sports {}
+.sport-menu-sport-item {
+    padding: 3% 0 3% 10%;
+    cursor: pointer;
+}
+.sport-menu-sport-item:hover { opacity: 0.7; }
+.sports-menu-countries { margin-left: 6%; }
+.sports-menu-country-item {
+    padding: 3% 0 3% 10%;
+    cursor: pointer;
+}
+.sports-menu-country-item:hover { opacity: 0.7; }
+.sports-menu-leagues { margin-left: 6%; }
+.sports-menu-league-item {
+    padding: 3% 0 3% 10%;
+    cursor: pointer;
+}
+.sports-menu-league-item:hover { opacity: 0.7; }
+.sports-menu-leagues a {
+    text-decoration: none;
+    color: #4a4a4a;
+}
+.sport-menu-icon-span {
+    margin-right: 5px;
+}

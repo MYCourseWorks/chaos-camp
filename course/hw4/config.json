@@ -1,0 +1,13 @@
+{
+    "ListOfURLs": [
+        "https://www.wikipedia.org",
+        "http://dir.bg/",
+        "http://zamunda.net/"
+    ],
+    "MaxRoutines": 3,
+    "MaxIndexingTimeInMs": 2000,
+    "BaseResultFileName": "result",
+    "MaxResultFileSizeInBytes": 500000,
+    "MaxResultFiles": 10
+
+}
